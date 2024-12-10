@@ -1,0 +1,32 @@
+version: "3.1"
+
+services:
+  db:
+    image: mariadb:10.6
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+    ports:
+      - 3306:3306
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      - PMA_ARBITRARY=1
+
+  fastapi:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    # environment:
+    # SQLALCHEMY_DATABASE_URL: "mysql+pymysql://mysql:mysql@db/test"
+    networks:
+      - app-network
+
+networks:
+  app-network:
